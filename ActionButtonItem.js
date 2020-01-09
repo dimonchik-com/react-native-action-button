@@ -122,7 +122,7 @@ export default class ActionButtonItem extends Component {
           >
             <View style={[
               buttonStyle,
-              !hideShadow ? {...shadowStyle, ...this.props.shadowStyle} : null
+              !global.hideShadowFixReactNativeActionButton ? {...shadowStyle, ...this.props.shadowStyle} : null
             ]}>
               {this.props.children}
             </View>
@@ -149,7 +149,7 @@ export default class ActionButtonItem extends Component {
     const offsetTop = Math.max(size / 2 - TEXT_HEIGHT / 2, 0);
     const positionStyles = { top: offsetTop };
     const hideShadow = hideLabelShadow === undefined
-      ? this.props.hideShadow
+      ? global.hideShadowFixReactNativeActionButton
       : hideLabelShadow;
 
     if (position !== "center") {
@@ -162,7 +162,7 @@ export default class ActionButtonItem extends Component {
     const textStyles = [
       styles.textContainer,
       positionStyles,
-      !hideShadow && shadowStyle,
+      !global.hideShadowFixReactNativeActionButton && shadowStyle,
       textContainerStyle
     ];
 

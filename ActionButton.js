@@ -17,6 +17,8 @@ import {
   DEFAULT_ACTIVE_OPACITY
 } from "./shared";
 
+global.hideShadowFixReactNativeActionButton=false;
+
 export default class ActionButton extends Component {
   constructor(props) {
     super(props);
@@ -39,7 +41,7 @@ export default class ActionButton extends Component {
     clearTimeout(this.timeout);
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentDidUpdate(nextProps) {
     if (nextProps.resetToken !== this.state.resetToken) {
       if (nextProps.active === false && this.state.active === true) {
         if (this.props.onReset) this.props.onReset();
@@ -327,6 +329,10 @@ export default class ActionButton extends Component {
   }
 
   reset(animate = true) {
+    global.hideShadowFixReactNativeActionButton=true;
+
+    this.setState({ resetToken: this.state.resetToken });
+
     if (this.props.onReset) this.props.onReset();
 
     if (animate) {
@@ -337,7 +343,8 @@ export default class ActionButton extends Component {
 
     setTimeout(() => {
       if (this.mounted) {
-        this.setState({ active: false, resetToken: this.state.resetToken });  
+        this.setState({ active: false, resetToken: this.state.resetToken });
+        global.hideShadowFixReactNativeActionButton=false;
       }
     }, 250);
   }
