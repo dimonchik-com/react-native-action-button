@@ -30,6 +30,8 @@ export default class ActionButton extends Component {
 
     this.anim = new Animated.Value(props.active ? 1 : 0);
     this.timeout = null;
+
+    global.fixReactNativeActionButton=this;
   }
 
   componentDidMount() {
@@ -220,7 +222,7 @@ export default class ActionButton extends Component {
           onPressOut={this.props.onPressOut}
         >
           <Animated.View
-            style={wrapperStyle}
+            style={{...wrapperStyle, opacity:this.props.fadeAnimProp}}
           >
             <Animated.View style={[buttonStyle, animatedViewStyle]}>
               {this._renderButtonIcon()}
@@ -289,6 +291,7 @@ export default class ActionButton extends Component {
             {...ActionButton.props}
             parentSize={this.props.size}
             btnColor={this.props.btnOutRange}
+            fadeAnimProp={this.props.fadeAnimProp}
             onPress={() => {
               if (this.props.autoInactive) {
                 this.timeout = setTimeout(this.reset.bind(this), 200);

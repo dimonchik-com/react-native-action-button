@@ -106,7 +106,7 @@ export default class ActionButtonItem extends Component {
     return (
       <Animated.View
         pointerEvents="box-none"
-        style={[animatedViewStyle, parentStyle]}
+        style={{...animatedViewStyle, ...parentStyle, opacity:this.props.fadeAnimProp}}
       >
         <View>
           <Touchable
