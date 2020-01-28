@@ -23,10 +23,11 @@ const SHADOW_SPACE = 10;
 const TEXT_HEIGHT = 22;
 
 const TextTouchable = isAndroid
-  ? TouchableNativeFeedback
-  : TouchableWithoutFeedback;
+    ? TouchableNativeFeedback
+    : TouchableWithoutFeedback;
 
 export default class ActionButtonItem extends Component {
+
   static get defaultProps() {
     return {
       active: true,
@@ -56,7 +57,8 @@ export default class ActionButtonItem extends Component {
       position,
       verticalOrientation,
       hideShadow,
-      spacing
+      spacing,
+      hideShadowFix
     } = this.props;
 
     if (!this.props.active) return null;
@@ -92,44 +94,45 @@ export default class ActionButtonItem extends Component {
     const Touchable = getTouchableComponent(this.props.useNativeFeedback);
 
     const parentStyle = isAndroid &&
-      this.props.fixNativeFeedbackRadius
-      ? {
+    this.props.fixNativeFeedbackRadius
+        ? {
           height: size,
           marginBottom: spacing,
           right: this.props.offsetX,
           borderRadius: this.props.size / 2
         }
-      : {
+        : {
           paddingHorizontal: this.props.offsetX,
           height: size + SHADOW_SPACE + spacing
         };
+
     return (
-      <Animated.View
-        pointerEvents="box-none"
-        style={{...animatedViewStyle, ...parentStyle, opacity:this.props.fadeAnimProp}}
-      >
-        <View>
-          <Touchable
-            rejectResponderTermination
-            testID={this.props.testID}
-            accessibilityLabel={this.props.accessibilityLabel}
-            background={touchableBackground(
-              this.props.nativeFeedbackRippleColor,
-              this.props.fixNativeFeedbackRadius
-            )}
-            activeOpacity={this.props.activeOpacity || DEFAULT_ACTIVE_OPACITY}
-            onPress={this.props.onPress}
-          >
-            <View style={[
-              buttonStyle,
-              !global.hideShadowFixReactNativeActionButton ? {...shadowStyle, ...this.props.shadowStyle} : null
-            ]}>
-              {this.props.children}
-            </View>
-          </Touchable>
-        </View>
-        {this._renderTitle()}
-      </Animated.View>
+        <Animated.View
+            pointerEvents="box-none"
+            style={[animatedViewStyle, parentStyle]}
+        >
+          <View>
+            <Touchable
+                rejectResponderTermination
+                testID={this.props.testID}
+                accessibilityLabel={this.props.accessibilityLabel}
+                background={touchableBackground(
+                    this.props.nativeFeedbackRippleColor,
+                    this.props.fixNativeFeedbackRadius
+                )}
+                activeOpacity={this.props.activeOpacity || DEFAULT_ACTIVE_OPACITY}
+                onPress={this.props.onPress}
+            >
+              <View style={[
+                buttonStyle,
+                !hideShadow && hideShadowFix.current.fixShadow ? {...shadowStyle, ...this.props.shadowStyle} : null
+              ]}>
+                {this.props.children}
+              </View>
+            </Touchable>
+          </View>
+          {this._renderTitle()}
+        </Animated.View>
     );
   }
 
@@ -145,16 +148,17 @@ export default class ActionButtonItem extends Component {
       position,
       spaceBetween,
       numberOfLines,
+      hideShadowFix
     } = this.props;
     const offsetTop = Math.max(size / 2 - TEXT_HEIGHT / 2, 0);
     const positionStyles = { top: offsetTop };
     const hideShadow = hideLabelShadow === undefined
-      ? global.hideShadowFixReactNativeActionButton
-      : hideLabelShadow;
+        ? this.props.hideShadow
+        : hideLabelShadow;
 
     if (position !== "center") {
       positionStyles[position] =
-        offsetX + (parentSize - size) / 2 + size + spaceBetween;
+          offsetX + (parentSize - size) / 2 + size + spaceBetween;
     } else {
       positionStyles.right = WIDTH / 2 + size / 2 + spaceBetween;
     }
@@ -162,38 +166,38 @@ export default class ActionButtonItem extends Component {
     const textStyles = [
       styles.textContainer,
       positionStyles,
-      !global.hideShadowFixReactNativeActionButton && shadowStyle,
+      !hideShadow && hideShadowFix.current.fixShadow && shadowStyle,
       textContainerStyle
     ];
 
     const title = (
-      React.isValidElement(this.props.title) ?
-        this.props.title
-      : (
-        <Text
-          allowFontScaling={false}
-          style={[styles.text, this.props.textStyle]}
-          numberOfLines={numberOfLines}
-        >
-          {this.props.title}
-        </Text>
-      )
+        React.isValidElement(this.props.title) ?
+            this.props.title
+            : (
+                <Text
+                    allowFontScaling={false}
+                    style={[styles.text, this.props.textStyle]}
+                    numberOfLines={numberOfLines}
+                >
+                  {this.props.title}
+                </Text>
+            )
     )
 
     return (
-      <TextTouchable
-        rejectResponderTermination
-        background={touchableBackground(
-          this.props.nativeFeedbackRippleColor,
-          this.props.fixNativeFeedbackRadius
-        )}
-        activeOpacity={this.props.activeOpacity || DEFAULT_ACTIVE_OPACITY}
-        onPress={this.props.onPress}
-      >
-        <View style={textStyles}>
-          {title}
-        </View>
-      </TextTouchable>
+        <TextTouchable
+            rejectResponderTermination
+            background={touchableBackground(
+                this.props.nativeFeedbackRippleColor,
+                this.props.fixNativeFeedbackRadius
+            )}
+            activeOpacity={this.props.activeOpacity || DEFAULT_ACTIVE_OPACITY}
+            onPress={this.props.onPress}
+        >
+          <View style={textStyles}>
+            {title}
+          </View>
+        </TextTouchable>
     );
   }
 }
