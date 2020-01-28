@@ -157,15 +157,19 @@ const ActionButton = props => {
               onPressOut={props.onPressOut}
           >
             {props.buttonIcon?(
-                <Animated.View style={wrapperStyle}>
-                  <Animated.View style={[buttonStyle, animatedViewStyle]}>
-                    {props.buttonIcon}
+                <Animated.View style={{ opacity:props.fadeAnimProp}}>
+                  <Animated.View style={wrapperStyle}>
+                    <Animated.View style={[buttonStyle, animatedViewStyle]}>
+                      {props.buttonIcon}
+                    </Animated.View>
                   </Animated.View>
                 </Animated.View>
             ):(
-                <Animated.View style={wrapperStyle}>
-                  <Animated.View style={[buttonStyle, animatedViewStyle]}>
-                    {_renderButtonIcon()}
+                <Animated.View style={{ opacity:props.fadeAnimProp}}>
+                  <Animated.View style={wrapperStyle}>
+                    <Animated.View style={[buttonStyle, animatedViewStyle]}>
+                      {_renderButtonIcon()}
+                    </Animated.View>
                   </Animated.View>
                 </Animated.View>
             )}
