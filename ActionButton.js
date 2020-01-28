@@ -24,7 +24,7 @@ const ActionButton = props => {
   const timeout = useRef(null);
   const mounted = useRef(false);
 
-  const hideShadowFix = useRef({fixShadow:false});
+  const hideShadowFix = useRef({fixShadow:true});
 
   useEffect(() => {
     mounted.current = true;
