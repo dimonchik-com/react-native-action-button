@@ -24,7 +24,7 @@ const ActionButton = props => {
   const timeout = useRef(null);
   const mounted = useRef(false);
 
-  const hideShadowFix = useRef({fixShadow:true});
+  const hideShadowFix = useRef({fixShadow:false});
 
   useEffect(() => {
     mounted.current = true;
@@ -79,6 +79,12 @@ const ActionButton = props => {
   };
 
   const _renderMainButton = () => {
+
+    let degree=props.degrees;
+    if(props.buttonIcon) {
+      degree = 0
+    }
+
     const animatedViewStyle = {
       transform: [
         {
@@ -90,7 +96,7 @@ const ActionButton = props => {
         {
           rotate: anim.current.interpolate({
             inputRange: [0, 1],
-            outputRange: ["0deg", props.degrees + "deg"]
+            outputRange: ["0deg", degree + "deg"]
           })
         }
       ]
@@ -150,11 +156,20 @@ const ActionButton = props => {
               onPressIn={props.onPressIn}
               onPressOut={props.onPressOut}
           >
-            <Animated.View style={wrapperStyle}>
-              <Animated.View style={[buttonStyle, animatedViewStyle]}>
-                {_renderButtonIcon()}
-              </Animated.View>
-            </Animated.View>
+            {props.buttonIcon?(
+                <Animated.View style={wrapperStyle}>
+                  <Animated.View style={[buttonStyle, animatedViewStyle]}>
+                    {props.buttonIcon}
+                  </Animated.View>
+                </Animated.View>
+            ):(
+                <Animated.View style={wrapperStyle}>
+                  <Animated.View style={[buttonStyle, animatedViewStyle]}>
+                    {_renderButtonIcon()}
+                  </Animated.View>
+                </Animated.View>
+            )}
+
           </TouchableWithoutFeedback>
         </View>
     );
@@ -343,6 +358,7 @@ ActionButton.propTypes = {
   buttonColor: PropTypes.string,
   buttonTextStyle: Text.propTypes.style,
   buttonText: PropTypes.string,
+  buttonIcon: PropTypes.any,
 
   offsetX: PropTypes.number,
   offsetY: PropTypes.number,

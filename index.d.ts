@@ -25,6 +25,7 @@ export interface ActionButtonProperties extends ViewProperties {
   offsetX?: number,
   offsetY?: number,
   fadeAnimProp: any,
+  buttonIcon?:any,
   spacing?: number,
   size?: number,
   autoInactive?: boolean,
